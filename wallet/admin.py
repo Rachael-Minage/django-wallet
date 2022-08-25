@@ -6,9 +6,15 @@ class CustomerAdmin(admin.ModelAdmin):
     list_display = ("first_name","last_name","address")
     search_fields = ("first_name","last_name")
 
+class WalletAdmin(admin.ModelAdmin):
+    list_display =("balance","customer","currency")
+    search_fields = ("balance","customer")
+admin.site.register(Wallet,WalletAdmin)
+
+
+
 
 admin.site.register(Customer,CustomerAdmin)
-admin.site.register(Wallet)
 admin.site.register(Account)
 admin.site.register(Transaction)
 admin.site.register(Card)
