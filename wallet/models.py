@@ -13,7 +13,7 @@ class Customer(models.Model):
     nationality = models.CharField(max_length=15,blank=True)
     id_number = models.CharField(max_length=15,blank=True)
     phone_number = models.CharField(max_length=15,blank=True)
-    email = models.EmailField(default=False)
+    email = models.EmailField()
     profile_picture = models.ImageField(default=False)
     marital_status = models.CharField(max_length=15,blank=True)
     signature = models.ImageField(default = False)
@@ -21,8 +21,8 @@ class Customer(models.Model):
 
 
 class Wallet(models.Model):
-    balance = models.IntegerField(blank=True)
-    customer = models.OneToOneField(Customer,on_delete=models.CASCADE)
+    balance = models.IntegerField(default=0)
+    customer = models.OneToOneField('Customer',on_delete=models.CASCADE,blank=True, default=False)
     pin = models.SmallIntegerField(blank=True)
     currency = models.CharField(max_length=10,blank=False)
     is_active = models.BooleanField()
@@ -35,14 +35,20 @@ class Account(models.Model):
     savings = models.IntegerField(default=False)
     wallet = models.ForeignKey(Wallet,on_delete = models.CASCADE)
     destination = models.CharField(max_length=15,blank=True)
+    account_number = models.IntegerField(default=False)
 
 
 class Transaction (models.Model):
-    transaction_type = models.CharField(max_length=20,blank=True)
-    third_party = models.ForeignKey(Account,on_delete = models.CASCADE)
     date_and_time = models.DateTimeField(null = True)
-    receipt = models.CharField(max_length=20,blank=True)
-    status = models.CharField(max_length=20,blank = True)
+    transaction_amount = models.IntegerField(default=0)
+    transaction_type = models.CharField(max_length=15,blank=True, default=False)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, blank=True, default=False)
+    transaction_code = models.CharField(max_length=15,blank=True, default=False)
+    transaction_charge = models.IntegerField(default=0)
+    status = models.CharField(max_length=15,blank=True, default=False)
+    origin_account = models.ForeignKey("Account", on_delete=models.CASCADE,related_name="Transaction_Receipt",blank=True, default=False)
+    destination_account = models.ForeignKey("Account", on_delete=models.CASCADE)
+
 
 class Card(models.Model):
     date_issued = models.DateTimeField(null=True)
@@ -51,9 +57,11 @@ class Card(models.Model):
     signature = models.ImageField(default=True)
     issuer = models.CharField(max_length=18,blank=True)
     account = models.ForeignKey(Account,on_delete=models.CASCADE)
+    card_name = models.CharField(max_length=10, blank=True)
+    card_number = models.IntegerField(default=0)
 
 class Third_party(models.Model):
-    full_name = models.CharField(max_length=18,blank=True)
+    party_name = models.CharField(max_length=18,blank=True)
     email = models.EmailField(default = False)
     phone_number = models.CharField(max_length=18,blank=True)
     transaction_cost  = models.IntegerField(default=False)
@@ -71,6 +79,9 @@ class Receipts(models.Model):
     date = models.DateTimeField(null=True)
     transaction = models.ForeignKey(Transaction,on_delete =models.CASCADE)
     receipt_file = models.FileField()
+    number = models.IntegerField(default=0)
+    amount = models.IntegerField(default=0)
+    receipt_type = models.CharField(max_length=15,blank=True)
 
 class Loan(models.Model):
     loan_type = models.CharField(max_length=15,blank=True)
