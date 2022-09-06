@@ -8,7 +8,7 @@ class Customer(models.Model):
     first_name = models.CharField(max_length=15,blank=True)
     last_name = models.CharField(max_length=15,blank=True)
     gender = models.CharField(max_length=1,blank=True)
-    address = models.TextField()
+    address = models.CharField(max_length=10,blank=True)
     age = models.PositiveSmallIntegerField(default= False)
     nationality = models.CharField(max_length=15,blank=True)
     id_number = models.CharField(max_length=15,blank=True)
@@ -34,7 +34,6 @@ class Account(models.Model):
     account_name = models.CharField(max_length=15,blank=True)
     savings = models.IntegerField(default=False)
     wallet = models.ForeignKey(Wallet,on_delete = models.CASCADE)
-    destination = models.CharField(max_length=15,blank=True)
     account_number = models.IntegerField(default=False)
 
 
